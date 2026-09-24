@@ -1777,10 +1777,34 @@ input[type="range"] {
     font-weight: 500;
     color: var(--color-text-muted);
     font-family: var(--font-primary);
-    letter-spacing: 1px;
-    z-index: 5;
+    letter-spacing: 0.5px;
+    z-index: 10;
     user-select: none;
-    pointer-events: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.version-github-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.25s ease, transform 0.25s ease;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.version-github-link:hover {
+    color: var(--color-text-main);
+    transform: scale(1.15);
+}
+
+.version-github-link svg {
+    display: block;
+    width: 16px;
+    height: 16px;
 }
 
 /* Floating Global Desktop Promo Link (Bottom Left) */
