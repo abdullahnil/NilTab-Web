@@ -1,4 +1,4 @@
-# NilTab / NilSaver 🌙
+# NilTab Web 🌙
 
 Modern, şık ve özelleştirilebilir dinamik ekran koruyucu ve başlangıç sekmesi (New Tab / Dashboard) uygulaması.
 
