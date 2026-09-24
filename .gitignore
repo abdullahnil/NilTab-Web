@@ -1,0 +1,8 @@
+# Sensitive Credential Files
+credentials.js
+.env
+
+# Environment & Logs
+*.log
+node_modules/
+.DS_Store

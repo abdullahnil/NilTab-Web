@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NilTab Dashboard</title>
+    <!-- Outfit & Playfair Display fonts from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+    <link rel="icon" type="image/png" href="niltablogo.png">
+</head>
+
+<body>
+
+    <!-- Dynamic Background Wrapper -->
+    <div id="bg-container">
+        <div id="bg-gradient" class="bg-layer active"></div>
+        <img id="bg-image" class="bg-layer" alt="Background">
+        <video id="bg-video" class="bg-layer" autoplay loop muted playsinline></video>
+        <div id="bg-overlay"></div>
+    </div>
+
+    <!-- Main Dashboard Layer -->
+    <div id="dashboard" class="ui-layer dashboard-layout">
+
+        <!-- Left Side Column: Clock, Weather, Prayer, Calendar, Control Panel -->
+        <div class="dashboard-side-left">
+            <!-- Clock & Date Container -->
+            <div class="clock-container align-left">
+                <div id="main-clock" class="digital-clock"><span id="clock-hm"
+                        class="clock-hours-mins">00:00</span><span id="clock-seconds" class="seconds-display">:00</span>
+                </div>
+                <div id="main-date" class="date-display">6 Ağustos 2026 Perşembe</div>
+            </div>
+
+            <!-- Weather Widget (Clickable for forecast) -->
+            <div id="weather-widget" class="widget-card glass compact-widget" style="cursor: pointer;"
+                title="Detaylı Hava Durumu / Detailed Weather">
+                <div class="widget-header">
+                    <span class="widget-title" id="weather-title-lbl">Hava Durumu</span>
+                    <span id="weather-location" class="widget-subtitle">Yükleniyor...</span>
+                </div>
+                <div class="widget-content weather-main">
+                    <span id="weather-temp" class="temp-display">--°C</span>
+                    <span id="weather-icon" class="weather-icon">☀️</span>
+                </div>
+                <div id="weather-desc" class="widget-footer">Lütfen bekleyin...</div>
+            </div>
+
+            <!-- Prayer Times Widget -->
+            <div id="prayer-widget" class="widget-card glass compact-widget" style="cursor: pointer;"
+                title="Namaz Vakitleri Ayarları / Prayer Settings">
+                <div class="widget-header">
+                    <span class="widget-title" id="prayer-title-lbl" data-i18n="prayer">Namaz Vakitleri</span>
+                    <span id="prayer-city" class="widget-subtitle">Yükleniyor...</span>
+                </div>
+                <div class="widget-content prayer-grid">
+                    <div class="prayer-time-item" id="pt-imsak"><span class="pt-name"
+                            data-i18n="imsak">İmsak</span><span class="pt-val">--:--</span></div>
+                    <div class="prayer-time-item" id="pt-gunes"><span class="pt-name"
+                            data-i18n="gunes">Güneş</span><span class="pt-val">--:--</span></div>
+                    <div class="prayer-time-item" id="pt-ogle"><span class="pt-name" data-i18n="ogle">Öğle</span><span
+                            class="pt-val">--:--</span></div>
+                    <div class="prayer-time-item" id="pt-ikindi"><span class="pt-name"
+                            data-i18n="ikindi">İkindi</span><span class="pt-val">--:--</span></div>
+                    <div class="prayer-time-item" id="pt-aksam"><span class="pt-name"
+                            data-i18n="aksam">Akşam</span><span class="pt-val">--:--</span></div>
+                    <div class="prayer-time-item" id="pt-yatsi"><span class="pt-name"
+                            data-i18n="yatsi">Yatsı</span><span class="pt-val">--:--</span></div>
+                </div>
+                <div id="prayer-next" class="widget-footer">Sonraki vakit...</div>
+            </div>
+
+            <!-- Calendar Widget -->
+            <div id="calendar-widget" class="widget-card glass">
+                <div class="widget-header">
+                    <span class="widget-title" data-i18n="calendar">Takvim & Etkinlikler</span>
+                    <button id="add-event-btn" class="calendar-action-btn" title="Etkinlik Ekle">+</button>
+                </div>
+                <div class="widget-content calendar-split">
+                    <!-- Month Grid -->
+                    <div class="calendar-month-view">
+                        <div class="calendar-month-header">
+                            <button id="btn-calendar-prev" class="calendar-nav-btn" title="Önceki Ay">&lt;</button>
+                            <span id="calendar-month-name">Ağustos 2026</span>
+                            <button id="btn-calendar-next" class="calendar-nav-btn" title="Sonraki Ay">&gt;</button>
+                        </div>
+                        <div class="calendar-weekdays">
+                            <span>Pz</span><span>Sa</span><span>Çar</span><span>Per</span><span>Cu</span><span>Ct</span><span>Pa</span>
+                        </div>
+                        <div id="calendar-days" class="calendar-days-grid">
+                            <!-- Dynamic days -->
+                        </div>
+                    </div>
+                    <!-- Upcoming Events -->
+                    <div class="calendar-events-pane">
+                        <div class="events-pane-header" data-i18n="upcoming">Yaklaşanlar</div>
+                        <div id="calendar-events-list" class="events-list">
+                            <!-- Dynamic events -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Center Panel: Empty for clean minimalism -->
+        <div class="dashboard-center-panel">
+            <!-- Completely empty for pristine minimalism -->
+        </div>
+
+        <!-- Right Side Column: Search, Shortcuts, Control Bar, Quote Widgets -->
+        <div class="dashboard-side-right">
+            <!-- Search Bar Widget -->
+            <div class="search-container">
+                <div class="search-bar-wrapper">
+                    <!-- Custom engine selector -->
+                    <div class="search-engine-selector">
+                        <button id="engine-select-btn" class="engine-select-btn" title="Arama Motoru Seçin">
+                            <span id="current-engine-icon">🌐</span>
+                            <span id="current-engine-name">Google</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9" />
+                            </svg>
+                        </button>
+                        <div id="engine-dropdown-list" class="engine-dropdown-list">
+                            <div class="engine-opt selected" data-engine="google" data-icon="🌐">
+                                <span>🌐</span> Google
+                            </div>
+                            <div class="engine-opt" data-engine="startpage" data-icon="🛡️">
+                                <span>🛡️</span> StartPage
+                            </div>
+                            <div class="engine-opt" data-engine="duckduckgo" data-icon="🦆">
+                                <span>🦆</span> DuckDuckGo
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Input text -->
+                    <input type="text" id="search-input-field" class="search-input-field"
+                        placeholder="Google ile ara..." autocomplete="off">
+                    <!-- Search execute -->
+                    <button id="search-execute-btn" class="search-execute-btn" title="Ara">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- App Shortcuts Dock -->
+            <div id="shortcuts-widget" class="widget-card glass shortcuts-widget-box">
+                <div class="widget-header">
+                    <span class="widget-title" id="shortcuts-title-lbl">Kısayollar</span>
+                    <button id="add-shortcut-btn" class="calendar-action-btn" title="Kısayol Ekle">+</button>
+                </div>
+                <div class="shortcuts-dock" id="shortcut-items">
+                    <!-- Dynamic shortcuts with proper icons will go here -->
+                </div>
+            </div>
+
+            <!-- Control Bar / Options Menu -->
+            <nav id="control-bar" class="control-panel glass">
+                <!-- Odak Modu: Target/Focus icon -->
+                <button id="btn-focus" class="control-btn" title="Odak Modu">
+                    <span class="btn-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"
+                            class="control-svg">
+                            <circle cx="12" cy="12" r="10" />
+                            <circle cx="12" cy="12" r="6" />
+                            <circle cx="12" cy="12" r="2" />
+                        </svg>
+                    </span>
+                    <span class="btn-label" data-i18n="focus_btn">Odak Modu</span>
+                </button>
+
+                <!-- Tahta Modu: Presentation Board icon -->
+                <button id="btn-board" class="control-btn" title="Tahta Modu">
+                    <span class="btn-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"
+                            class="control-svg">
+                            <rect x="2" y="3" width="20" height="14" rx="2" />
+                            <line x1="8" y1="21" x2="12" y2="17" />
+                            <line x1="12" y1="17" x2="16" y2="21" />
+                            <line x1="12" y1="3" x2="12" y2="1" />
+                        </svg>
+                    </span>
+                    <span class="btn-label" data-i18n="board_btn">Tahta Modu</span>
+                </button>
+
+                <!-- AI Asistan: Microphone icon -->
+                <button id="btn-voice" class="control-btn pulse-button" title="Yapay Zeka Ses Butonu">
+                    <span class="btn-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"
+                            class="control-svg">
+                            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                            <line x1="12" y1="19" x2="12" y2="22" />
+                        </svg>
+                    </span>
+                    <span class="btn-label" data-i18n="voice_btn">AI Asistan</span>
+                </button>
+
+                <!-- Tam Ekran: Maximize icon -->
+                <button id="btn-fullscreen" class="control-btn" title="Tam Ekran (F11)">
+                    <span class="btn-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"
+                            class="control-svg">
+                            <polyline points="15 3 21 3 21 9" />
+                            <polyline points="9 21 3 21 3 15" />
+                            <line x1="21" y1="3" x2="14" y2="10" />
+                            <line x1="3" y1="21" x2="10" y2="14" />
+                        </svg>
+                    </span>
+                    <span class="btn-label" data-i18n="fullscreen_btn">Tam Ekran</span>
+                </button>
+
+                <!-- Ayarlar: Gear/Cog icon -->
+                <button id="btn-settings" class="control-btn" title="Ayarlar">
+                    <span class="btn-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"
+                            class="control-svg">
+                            <circle cx="12" cy="12" r="3" />
+                            <path
+                                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                        </svg>
+                    </span>
+                    <span class="btn-label" data-i18n="settings_btn">Ayarlar</span>
+                </button>
+
+                <!-- Link: abdullahnil.com -->
+                <a id="btn-exit" class="control-btn" href="https://abdullahnil.com" target="_blank"
+                    rel="noopener noreferrer" title="abdullahnil.com">
+                    <span class="btn-icon">
+                        <img src="logo.png" alt="abdullahnil" class="an-logo-img" />
+                    </span>
+                    <span class="btn-label">abdullahnil.com</span>
+                </a>
+            </nav>
+
+            <!-- Quote/Verse Widget -->
+            <div id="quote-widget" class="widget-card glass quote-widget-box">
+                <div class="widget-header">
+                    <span class="widget-title" id="quote-type">Günün Ayeti / Hadisi</span>
+                </div>
+                <div class="widget-content quote-main">
+                    <p id="quote-text">Yükleniyor...</p>
+                    <span id="quote-source" class="quote-source"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 1. Whiteboard Overlay (Tahta Modu) -->
+    <div id="whiteboard-overlay" class="ui-layer hidden">
+        <canvas id="paint-canvas"></canvas>
+        <input type="text" id="canvas-text-input" class="hidden" placeholder="Metin yazın ve Enter'a basın..."
+            style="position: absolute; background: rgba(17, 17, 22, 0.9); border: 1px dashed var(--color-accent); color: white; font-family: var(--font-primary); font-size: 20px; outline: none; padding: 6px 12px; border-radius: 6px; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
+        <div id="paint-toolbar" class="paint-toolbar glass">
+            <button id="btn-paint-back" class="paint-tool-btn" title="Panodan Çık">⬅️ Çık</button>
+            <div class="toolbar-separator"></div>
+            <!-- Colors -->
+            <div class="tool-group">
+                <button class="color-btn active" style="background-color: #ffffff;" data-color="#ffffff"></button>
+                <button class="color-btn" style="background-color: #ff5e57;" data-color="#ff5e57"></button>
+                <button class="color-btn" style="background-color: #ffdd59;" data-color="#ffdd59"></button>
+                <button class="color-btn" style="background-color: #0be881;" data-color="#0be881"></button>
+                <button class="color-btn" style="background-color: #00d2d3;" data-color="#00d2d3"></button>
+                <button class="color-btn" style="background-color: #54a0ff;" data-color="#54a0ff"></button>
+                <button class="color-btn" style="background-color: #5f27cd;" data-color="#5f27cd"></button>
+                <input type="color" id="paint-color-custom" title="Özel Renk" value="#ffffff">
+            </div>
+            <div class="toolbar-separator"></div>
+            <!-- Brush Sizes -->
+            <div class="tool-group flex-center">
+                <span>Kalınlık:</span>
+                <input type="range" id="paint-brush-size" min="1" max="40" value="5">
+                <span id="brush-size-val">5px</span>
+            </div>
+            <div class="toolbar-separator"></div>
+            <!-- Actions -->
+            <button id="btn-paint-text" class="paint-tool-btn" title="Metin Yaz">🔤 Metin</button>
+            <button id="btn-paint-eraser" class="paint-tool-btn" title="Silgi">🧽 Silgi</button>
+            <button id="btn-paint-undo" class="paint-tool-btn" title="Geri Al">↩️ Geri</button>
+            <button id="btn-paint-clear" class="paint-tool-btn alert" title="Tümünü Temizle">🗑️ Temizle</button>
+            <button id="btn-paint-save" class="paint-tool-btn success" title="Resmi Kaydet">💾 Kaydet</button>
+        </div>
+    </div>
+
+    <!-- 2. Focus Mode Overlay (Odak Modu) -->
+    <div id="focus-overlay" class="ui-layer hidden">
+        <div id="focus-clock" class="focus-clock hidden"><span id="focus-hm" class="focus-hours-mins">00:00</span><span
+                id="focus-seconds" class="focus-seconds-display">:00</span></div>
+        <div class="focus-instructions" data-i18n="focus_exit_info">Geri dönmek için ekrana çift tıklayın</div>
+    </div>
+
+    <!-- 3. AI Voice Assistant Overlay -->
+    <div id="voice-overlay" class="ui-layer hidden">
+        <div class="voice-card glass">
+            <div class="voice-wave-container">
+                <canvas id="voice-wave"></canvas>
+            </div>
+            <h2 id="voice-status" data-i18n="listening">Dinliyorum...</h2>
+            <p id="voice-transcription" class="voice-text-preview"></p>
+            <p id="voice-response" class="voice-text-response"></p>
+            <button id="btn-voice-close" class="voice-close-btn" data-i18n="btn_cancel">Kapat</button>
+        </div>
+    </div>
+
+    <!-- 4. Settings Overlay -->
+    <div id="settings-overlay" class="ui-layer hidden">
+        <div class="settings-dialog glass">
+            <div class="settings-header">
+                <h2 data-i18n="settings_title">Ayarlar</h2>
+                <button id="settings-close-btn" class="settings-close-x">&times;</button>
+            </div>
+            <div class="settings-body">
+                <!-- Tabs -->
+                <div class="settings-tabs">
+                    <button class="tab-btn active" data-tab="tab-general">Genel</button>
+                    <button class="tab-btn" data-tab="tab-bg">Arkaplan</button>
+                    <button class="tab-btn" data-tab="tab-widgets">Hava & Namaz</button>
+                    <button class="tab-btn" data-tab="tab-shortcuts">Kısayollar</button>
+                    <button class="tab-btn" data-tab="tab-calendar">Takvim</button>
+                    <button class="tab-btn" data-tab="tab-ai">AI Asistan</button>
+                </div>
+
+                <!-- Content Area -->
+                <div class="settings-tab-content">
+
+                    <!-- General Tab -->
+                    <div id="tab-general" class="tab-pane active">
+                        <div class="form-group">
+                            <label for="setting-lang" data-i18n="lbl_language">Dil / Language</label>
+                            <select id="setting-lang">
+                                <option value="tr">Türkçe</option>
+                                <option value="en">English</option>
+                                <option value="de">Deutsch</option>
+                                <option value="ru">Русский</option>
+                                <option value="mk">Македонски</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="setting-mode" data-i18n="lbl_mode">Ekran Koruyucu Çıkış Modu</label>
+                            <select id="setting-mode">
+                                <option value="interactive" data-i18n="lbl_mode_int">Etkileşimli (Çıkış için Esc tuşuna basın)</option>
+                                <option value="traditional" data-i18n="lbl_mode_scr">Klasik (Fare oynayınca veya tıklayınca kapanır)</option>
+                            </select>
+                            <span class="help-text">Etkileşimli modda çizim yapabilir, widget'ları
+                                kullanabilirsiniz.</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="setting-focus-clock">
+                                <span data-i18n="lbl_focus_clock">Odak modunda saat gösterilsin mi?</span>
+                            </label>
+                        </div>
+                        <div class="form-group"
+                            style="margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.08);">
+                            <h4 data-i18n="lbl_about_privacy_title"
+                                style="margin-bottom: 5px; color: var(--color-accent); font-size: 0.85rem;">Hakkında &
+                                Gizlilik</h4>
+                            <p data-i18n="lbl_about_privacy_text"
+                                style="font-size: 0.72rem; color: var(--color-text-muted); line-height: 1.4;">
+                                NilTab tamamen yerel odaklı çalışır. Konumunuz ve takvim verileriniz cihazınızda
+                                işlenir ve hiçbir üçüncü taraf sunucuyla paylaşılmaz. AI Sesli Asistan tarayıcınızın
+                                yerel ses tanıma sistemini kullanır.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Background Tab -->
+                    <div id="tab-bg" class="tab-pane">
+                        <div class="form-group">
+                            <label for="setting-bg-type" data-i18n="lbl_bg_type">Arkaplan Türü</label>
+                            <select id="setting-bg-type">
+                                <option value="gradient" data-i18n="lbl_bg_type_grad">Dinamik Renk Geçişi (Varsayılan)</option>
+                                <option value="image" data-i18n="lbl_bg_type_image">Görsel / Resim</option>
+                                <option value="video" data-i18n="lbl_bg_type_video">Video</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="bg-file-selector-group">
+                            <label data-i18n="lbl_bg_path">Arkaplan Dosyası Seç</label>
+                            <div class="flex-row">
+                                <input type="text" id="setting-bg-path" placeholder="Dosya yolu veya web URL'si"
+                                    readonly>
+                                <button id="btn-select-bg-file" class="action-btn" data-i18n="lbl_bg_select">Dosya Seç</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label id="lbl_bg_presets" data-i18n="lbl_bg_presets">Hazır Arkaplanlar</label>
+                            <div class="bg-presets-grid" id="bg-presets-container"
+                                style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 5px; margin-bottom: 10px;">
+                                <!-- Dynamic preset tiles -->
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="setting-bg-blur"><span data-i18n="lbl_bg_blur">Arkaplan Bulanıklığı</span>: <span id="bg-blur-val">0px</span></label>
+                            <input type="range" id="setting-bg-blur" min="0" max="20" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="setting-bg-brightness"><span data-i18n="lbl_bg_brightness">Arkaplan Parlaklığı</span>: <span
+                                    id="bg-brightness-val">70%</span></label>
+                            <input type="range" id="setting-bg-brightness" min="10" max="100" value="70">
+                        </div>
+                    </div>
+
+                    <!-- Weather & Prayer Tab -->
+                    <div id="tab-widgets" class="tab-pane">
+                        <h3 data-i18n="tab_weather_heading">Hava Durumu Ayarları</h3>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="setting-weather-enabled">
+                                <span data-i18n="lbl_weather_show">Hava durumu widget'ını göster</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="setting-weather-city" data-i18n="lbl_weather_city">Şehir İsmi</label>
+                            <div class="flex-row">
+                                <input type="text" id="setting-weather-city" placeholder="Örn: Istanbul">
+                                <button id="btn-search-city" class="action-btn" data-i18n="lbl_weather_search">Ara ve Kaydet</button>
+                            </div>
+                            <span id="city-search-feedback" class="help-text text-success"></span>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <h3 data-i18n="tab_prayer_heading">Namaz Vakitleri Ayarları</h3>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="setting-prayer-enabled">
+                                <span data-i18n="lbl_prayer_show">Namaz vakti widget'ını göster</span>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="setting-prayer-source" data-i18n="lbl_prayer_source">Veri Kaynağı</label>
+                            <select id="setting-prayer-source">
+                                <option value="diyanet" data-i18n="lbl_prayer_src_diyanet">Resmi Diyanet API (Türkiye için önerilir)</option>
+                                <option value="aladhan" data-i18n="lbl_prayer_src_aladhan">Aladhan API (Yurtdışı için önerilir)</option>
+                            </select>
+                        </div>
+
+                        <!-- Diyanet selectors group -->
+                        <div id="diyanet-selectors-group">
+                            <div class="selector-group-title" data-i18n="lbl_diyanet_loc">📍 Diyanet Konum Seçimi</div>
+                            <div class="form-group">
+                                <label for="setting-prayer-country" data-i18n="lbl_country">Ülke</label>
+                                <select id="setting-prayer-country">
+                                    <option value="">Yükleniyor...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="setting-prayer-state" data-i18n="lbl_state">İl / Bölge</label>
+                                <select id="setting-prayer-state" disabled>
+                                    <option value="">Önce Ülke Seçin</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="setting-prayer-city" data-i18n="lbl_city">İlçe / Şehir</label>
+                                <select id="setting-prayer-city" disabled>
+                                    <option value="">Önce İl Seçin</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Aladhan selectors group -->
+                        <div id="aladhan-selectors-group" class="hidden">
+                            <div class="selector-group-title" data-i18n="lbl_aladhan_method">⚙️ Aladhan Metod Seçimi</div>
+                            <div class="form-group">
+                                <label for="setting-prayer-method" data-i18n="lbl_prayer_method">Hesaplama Metodu</label>
+                                <select id="setting-prayer-method">
+                                    <option value="13">Diyanet İşleri Başkanlığı (Türkiye)</option>
+                                    <option value="3">Muslim World League (MWL)</option>
+                                    <option value="2">Islamic Society of North America (ISNA)</option>
+                                    <option value="4">Umm Al-Qura University, Makkah</option>
+                                    <option value="5">Egyptian General Authority of Survey</option>
+                                </select>
+                            </div>
+                            <div class="form-group warning-text-box" data-i18n="lbl_aladhan_warning">
+                                ⚠️ <strong>Uyarı:</strong> Bu yöntem matematiksel hesaplama kullanır, resmi Diyanet takvimiyle ufak sapmalar (1-2 dakika) gösterebilir.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Shortcuts Tab -->
+                    <div id="tab-shortcuts" class="tab-pane">
+                        <div class="shortcuts-editor">
+                            <table class="editor-table">
+                                <thead>
+                                    <tr>
+                                        <th data-i18n="lbl_tbl_icon">İkon</th>
+                                        <th data-i18n="lbl_tbl_name">İsim</th>
+                                        <th data-i18n="lbl_tbl_path">Yol / URL</th>
+                                        <th data-i18n="lbl_tbl_action">İşlem</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="shortcuts-edit-list">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                            <button id="btn-editor-add-shortcut" class="action-btn success" data-i18n="lbl_add_shortcut_btn">+ Yeni Kısayol Ekle</button>
+                        </div>
+                    </div>
+
+                    <!-- Calendar Tab -->
+                    <div id="tab-calendar" class="tab-pane">
+                        <h3 data-i18n="lbl_cal_sync">Etkinlik Senkronizasyonu (.ics)</h3>
+                        <p class="help-text" data-i18n="lbl_cal_help">Yerel (.ics) dosya yollarını veya Google Calendar vb. özel URL'lerini
+                            ekleyebilirsiniz.</p>
+                        <div class="ics-sources-list" id="ics-sources-container">
+                            <!-- Dynamic synced ICS inputs -->
+                        </div>
+                        <div class="flex-row" style="gap: 10px; margin-bottom: 15px;">
+                            <button id="btn-add-ics-source" class="action-btn success" data-i18n="lbl_cal_add_source">+ Takvim Kaynağı Ekle</button>
+                            <button id="btn-upload-ics-web" class="action-btn info" style="display: none;" data-i18n="lbl_cal_upload">ICS Dosyası Yükle</button>
+                        </div>
+                        <div class="divider" style="margin: 15px 0; border-top: 1px solid rgba(255,255,255,0.08);">
+                        </div>
+                        <div class="gcal-guide-box"
+                            style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); padding: 12px; border-radius: 8px; margin-top: 10px;">
+                            <h4 style="margin-bottom: 8px; font-size: 0.85rem; text-transform: uppercase; color: var(--color-accent);"
+                                id="lbl_cal_gcal_title" data-i18n="lbl_cal_gcal_title">Google Takvim Nasıl Eklenir?</h4>
+                            <ul
+                                style="font-size: 0.75rem; color: var(--color-text-muted); padding-left: 15px; display: flex; flex-direction: column; gap: 6px; line-height: 1.4;">
+                                <li id="lbl_cal_gcal_step1" data-i18n="lbl_cal_gcal_step1">1. Google Takvim'i açın, sol menüde takviminizin yanındaki
+                                    üç noktaya basıp "Ayarlar ve Paylaşım" seçeneğine gidin.</li>
+                                <li id="lbl_cal_gcal_step2" data-i18n="lbl_cal_gcal_step2">2. Sayfanın en altına kaydırın ve "iCal biçimindeki gizli
+                                    adres" yazan kısmın yanındaki URL'yi kopyalayın.</li>
+                                <li id="lbl_cal_gcal_step3" data-i18n="lbl_cal_gcal_step3">3. Kopyaladığınız URL'yi yukarıdaki "Takvim Kaynağı"
+                                    kutularından birine yapıştırın.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- AI Assistant Tab -->
+                    <div id="tab-ai" class="tab-pane">
+                        <div class="form-group">
+                            <label for="setting-gemini-key" data-i18n="lbl_ai_key_title">Gemini API Anahtarı (API Key)</label>
+                            <input type="password" id="setting-gemini-key"
+                                placeholder="AI cevapları için Gemini API Key girin" data-i18n="lbl_ai_key_placeholder">
+                            <span class="help-text" data-i18n="lbl_ai_key_desc">API anahtarı girildiğinde asistanınız genel sorulara Gemini
+                                üzerinden cevap verebilir. Anahtar girilmezse yalnızca yerel komutları
+                                çalıştırır.</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="settings-footer">
+                <button id="btn-settings-save" class="action-btn success" data-i18n="btn_save">Ayarları Kaydet</button>
+                <button id="btn-settings-cancel" class="action-btn alert" data-i18n="btn_cancel">İptal</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Add Shortcut Modal Dialog -->
+    <div id="shortcut-dialog" class="dialog-overlay hidden">
+        <div class="dialog-box glass">
+            <h3 data-i18n="lbl_shortcut_diag_title">Kısayol Ekle</h3>
+            <div class="form-group">
+                <label for="diag-shortcut-name" data-i18n="lbl_shortcut_diag_name">Kısayol İsmi</label>
+                <input type="text" id="diag-shortcut-name" placeholder="Örn: YouTube">
+            </div>
+            <div class="form-group">
+                <label for="diag-shortcut-path" data-i18n="lbl_shortcut_diag_path">Uygulama Yolu veya Web Linki</label>
+                <input type="text" id="diag-shortcut-path"
+                    placeholder="Örn: https://youtube.com veya C:\Windows\notepad.exe" value="https://">
+            </div>
+            <div class="form-group">
+                <label for="diag-shortcut-icon" data-i18n="lbl_shortcut_diag_icon">Emoji İkonu</label>
+                <input type="text" id="diag-shortcut-icon" placeholder="Örn: 📺" value="🌐">
+            </div>
+            <div class="dialog-actions">
+                <button id="btn-dialog-shortcut-save" class="action-btn success" data-i18n="lbl_add_btn">Ekle</button>
+                <button id="btn-dialog-shortcut-cancel" class="action-btn alert" data-i18n="btn_cancel">Vazgeç</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. Add Custom Calendar Event Modal Dialog -->
+    <div id="event-dialog" class="dialog-overlay hidden">
+        <div class="dialog-box glass">
+            <h3 data-i18n="lbl_event_diag_title">Etkinlik Ekle</h3>
+            <div class="form-group">
+                <label for="diag-event-summary" data-i18n="lbl_event_diag_summary">Etkinlik Başlığı</label>
+                <input type="text" id="diag-event-summary" placeholder="Örn: Toplantı">
+            </div>
+            <div class="form-group">
+                <label for="diag-event-start" data-i18n="lbl_event_diag_start">Başlangıç Zamanı</label>
+                <input type="datetime-local" id="diag-event-start">
+            </div>
+            <div class="form-group">
+                <label for="diag-event-end" data-i18n="lbl_event_diag_end">Bitiş Zamanı</label>
+                <input type="datetime-local" id="diag-event-end">
+            </div>
+            <div class="dialog-actions">
+                <button id="btn-dialog-event-save" class="action-btn success" data-i18n="btn_save">Kaydet</button>
+                <button id="btn-dialog-event-cancel" class="action-btn alert" data-i18n="btn_cancel">İptal</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 7. Weather Forecast Modal -->
+    <div id="weather-modal" class="ui-layer hidden">
+        <div class="settings-dialog glass weather-modal-content" style="max-height: 90vh; overflow-y: auto;">
+            <div class="settings-header">
+                <h2 id="forecast-modal-title">Detaylı Hava Durumu</h2>
+                <button id="weather-close-btn" class="settings-close-x">&times;</button>
+            </div>
+            <div class="settings-tab-content" style="padding: 20px; display: block;">
+                <!-- Location Changer -->
+                <div class="forecast-location-section">
+                    <div class="flex-row" style="gap: 10px; margin-bottom: 10px;">
+                        <input type="text" id="forecast-city-input" placeholder="Şehir ismi girin..."
+                            style="flex-grow: 1;">
+                        <button id="btn-forecast-search" class="action-btn success">Ara</button>
+                        <button id="btn-forecast-gps" class="action-btn info">Konumumu Bul</button>
+                    </div>
+                    <span id="forecast-location-feedback" class="help-text"
+                        style="display: block; margin-top: 5px; font-size: 0.8rem;"></span>
+                </div>
+
+                <!-- Hourly forecast -->
+                <div class="forecast-section" style="margin-top: 20px;">
+                    <h4 id="forecast-hourly-title" style="margin-bottom: 10px;">Saatlik Tahmin (Bugün)</h4>
+                    <div class="forecast-scroll-container" id="forecast-hourly-list">
+                        <!-- Dynamic hourly cards -->
+                    </div>
+                </div>
+
+                <!-- Daily forecast -->
+                <div class="forecast-section" style="margin-top: 20px;">
+                    <h4 id="forecast-daily-title" style="margin-bottom: 10px;">Günlük Tahmin (7 Gün)</h4>
+                    <div class="forecast-list-container" id="forecast-daily-list">
+                        <!-- Dynamic daily rows -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Desktop Promo Link (Bottom Left) -->
+    <a href="https://nilhub.net" target="_blank" rel="noopener noreferrer" class="desktop-promo-link"
+        title="nilhub.net - nilTab Desktop">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="20" height="14" x="2" y="3" rx="2" />
+            <line x1="8" x2="16" y1="21" y2="21" />
+            <line x1="12" x2="12" y1="17" y2="21" />
+        </svg>
+        <span data-i18n="desktop_promo">nilTab Desktop'ı deneyin</span>
+    </a>
+
+    <!-- Floating Global Site Version Info -->
+    <div class="site-version">nilTab Web Preview v1.0 github_logo</div>
+
+    <script src="index.js"></script>
+</body>
+
+</html>
