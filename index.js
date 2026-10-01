@@ -840,7 +840,7 @@ function initApp() {
     initPrayerTimes();
     initCalendar();
     initShortcuts();
-    initQuoteWidget();
+    // initQuoteWidget(); // Günün ayeti/hadisi şimdilik deaktif
     initMediaController();
     
     const activeEngine = appSettings.search_engine || 'google';
@@ -1708,7 +1708,7 @@ function applyTranslations() {
     }
 
     // Refresh quote display with current language
-    renderQuoteWidget();
+    // renderQuoteWidget(); // Günün ayeti/hadisi şimdilik deaktif
 
     // Refresh calendar month and events if already rendered
     renderCalendarGrid();
