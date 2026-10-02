@@ -22,8 +22,8 @@ Modern, şık ve özelleştirilebilir dinamik ekran koruyucu ve başlangıç sek
 
 1. Depoyu klonlayın:
    ```bash
-   git clone https://github.com/kullaniciadi/nilsaver.git
-   cd nilsaver
+   git clone https://github.com/abdullahnil/NilTab-Web.git
+   cd NilTab-Web
    ```
 2. Herhangi bir statik web sunucusunda veya doğrudan `index.html` dosyasını tarayıcınızda açarak çalıştırabilirsiniz.
 
