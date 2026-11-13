@@ -6,3 +6,7 @@ credentials.js
 *.log
 node_modules/
 .DS_Store
+
+# Local AI agent guides (kept out of the public repo)
+AGENTS.md
+CLAUDE.md
