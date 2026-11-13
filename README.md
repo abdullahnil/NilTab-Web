@@ -34,13 +34,14 @@ Modern, şık ve özelleştirilebilir dinamik ekran koruyucu ve başlangıç sek
 Diyanet REST API CORS ve kimlik doğrulama gereksinimlerini güvenli şekilde karşılamak için Node.js proxy sunucusunu çalıştırın:
 
 1. Bağımlılık gerektirmez (Node.js dahili `http` ve `fetch` modüllerini kullanır).
-2. Ortam değişkenlerini ayarlayın (veya `.env` dosyası oluşturun):
+2. Ortam değişkenlerini ayarlayın veya `.env.example` dosyasını `.env` olarak kopyalayıp doldurun (proxy, kendi klasöründeki `.env` dosyasını otomatik okur):
    ```bash
    export DIYANET_EMAIL="ornek@email.com"
    export DIYANET_PASSWORD="diyanet_sifreniz"
    export PORT=3000
    export ALLOWED_ORIGINS="https://niltab-alan-adiniz.com"   # virgülle birden fazla verilebilir
-   export TRUST_PROXY=1          # yalnızca nginx/Cloudflare arkasında çalışıyorsa
+   export HOST=127.0.0.1         # nginx arkasındaysa yalnızca localhost'u dinle
+   export TRUST_PROXY=1          # önündeki proxy sayısı: 0 yok, 1 nginx, 2 Cloudflare + nginx
    export RATE_LIMIT_PER_MIN=30  # IP başına dakikada Diyanet'e iletilen istek sınırı
    ```
 3. Proxy sunucusunu başlatın:

@@ -1,6 +1,28 @@
 const http = require('http');
+const fs = require('fs');
+const path = require('path');
+
+// Minimal .env loader (no dependencies). Values already set in the environment win.
+(function loadDotEnv() {
+    const envPath = path.join(__dirname, '.env');
+    if (!fs.existsSync(envPath)) return;
+    for (const rawLine of fs.readFileSync(envPath, 'utf8').split(/\r?\n/)) {
+        const line = rawLine.trim();
+        if (!line || line.startsWith('#')) continue;
+        const eq = line.indexOf('=');
+        if (eq === -1) continue;
+        const key = line.slice(0, eq).trim();
+        let value = line.slice(eq + 1).trim();
+        if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+            value = value.slice(1, -1);
+        }
+        if (process.env[key] === undefined) process.env[key] = value;
+    }
+})();
 
 const PORT = process.env.PORT || 3000;
+// Use 127.0.0.1 when running behind nginx so the proxy cannot be reached directly from the internet.
+const HOST = process.env.HOST || '0.0.0.0';
 const DIYANET_EMAIL = process.env.DIYANET_EMAIL || "";
 const DIYANET_PASSWORD = process.env.DIYANET_PASSWORD || "";
 const DIYANET_API_BASE = "https://awqatsalah.diyanet.gov.tr";
@@ -12,9 +34,10 @@ const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || "*")
     .map(o => o.trim())
     .filter(Boolean);
 
-// Set TRUST_PROXY=1 only when running behind a reverse proxy (nginx, Cloudflare)
-// that sets X-Forwarded-For; otherwise clients could spoof their IP.
-const TRUST_PROXY = process.env.TRUST_PROXY === '1' || process.env.TRUST_PROXY === 'true';
+// Number of trusted reverse proxies in front of this server that append to X-Forwarded-For.
+// 0 = none (use socket address), 1 = nginx only, 2 = Cloudflare + nginx.
+// The client IP is taken counting from the RIGHT end, so values a client fakes on the left are ignored.
+const TRUST_PROXY = process.env.TRUST_PROXY === 'true' ? 1 : (parseInt(process.env.TRUST_PROXY, 10) || 0);
 
 // Max upstream (Diyanet) requests per client IP per minute. Cache hits do not count.
 const RATE_LIMIT_PER_MIN = parseInt(process.env.RATE_LIMIT_PER_MIN, 10) || 30;
@@ -96,10 +119,12 @@ async function getDiyanetToken() {
 }
 
 function getClientIp(req) {
-    if (TRUST_PROXY) {
+    if (TRUST_PROXY > 0) {
         const fwd = req.headers['x-forwarded-for'];
         if (typeof fwd === 'string' && fwd.length > 0) {
-            return fwd.split(',')[0].trim();
+            const hops = fwd.split(',').map(s => s.trim()).filter(Boolean);
+            const ip = hops[hops.length - TRUST_PROXY];
+            if (ip) return ip;
         }
     }
     return req.socket.remoteAddress || 'unknown';
@@ -243,12 +268,12 @@ const server = http.createServer(async (req, res) => {
     }
 });
 
-server.listen(PORT, () => {
+server.listen(PORT, HOST, () => {
     console.log(`=========================================`);
     console.log(`Diyanet REST API Proxy Server Running!`);
-    console.log(`Port: ${PORT}`);
+    console.log(`Listening on: ${HOST}:${PORT}`);
     console.log(`Allowed origins: ${ALLOWED_ORIGINS.join(', ')}`);
-    console.log(`Trust proxy (X-Forwarded-For): ${TRUST_PROXY}`);
+    console.log(`Trusted proxy hops (X-Forwarded-For): ${TRUST_PROXY}`);
     console.log(`Rate limit: ${RATE_LIMIT_PER_MIN} upstream req/min per IP`);
     console.log(`URL schema example: http://localhost:${PORT}/api/Place/Countries`);
     console.log(`=========================================`);
