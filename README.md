@@ -39,6 +39,9 @@ Diyanet REST API CORS ve kimlik doğrulama gereksinimlerini güvenli şekilde ka
    export DIYANET_EMAIL="ornek@email.com"
    export DIYANET_PASSWORD="diyanet_sifreniz"
    export PORT=3000
+   export ALLOWED_ORIGINS="https://niltab-alan-adiniz.com"   # virgülle birden fazla verilebilir
+   export TRUST_PROXY=1          # yalnızca nginx/Cloudflare arkasında çalışıyorsa
+   export RATE_LIMIT_PER_MIN=30  # IP başına dakikada Diyanet'e iletilen istek sınırı
    ```
 3. Proxy sunucusunu başlatın:
    ```bash
@@ -56,6 +59,10 @@ Diyanet REST API CORS ve kimlik doğrulama gereksinimlerini güvenli şekilde ka
 Proxy sunucusu (`diyanet-proxy.js`), botların veya yetkisiz isteklerin Diyanet API'ye geçersiz istek atarak hesabınızı riske atmasını önlemek için dahili **Whitelist (İzin Listesi)** korumasına sahiptir:
 - Yalnızca izin verilen API yollarına (`/api/Place/*`, `/api/PrayerTime/*`) izin verilir.
 - Tanımlanmayan diğer tüm istekler Diyanet'e iletilmeden `404 Not Found` olarak engellenir.
+- Yollar birebir eşleştirilir (yalnızca sayısal ID'ler kabul edilir) ve query string iletilmez.
+- `ALLOWED_ORIGINS` ile yalnızca kendi alan adınızdan gelen tarayıcı istekleri kabul edilir.
+- Yanıtlar sunucu belleğinde önbelleğe alınır (yer listeleri 7 gün, namaz vakitleri 6 saat). Diyanet'e giden istekler IP başına hız sınırına tabidir.
+- Diyanet giriş bilgileri yalnızca sunucudaki ortam değişkenlerinde tutulmalıdır; tarayıcı tarafına asla koymayın.
 
 ---
 

@@ -9,6 +9,27 @@ let weatherIntervalId = null;
 let lastWeatherFetchTime = 0;
 const WEATHER_UPDATE_INTERVAL = 5 * 60 * 1000; // 5 dakika (5 minutes)
 
+// --- Security helpers ---
+// Escape untrusted text before interpolating it into HTML (text nodes or quoted attributes).
+function escapeHtml(value) {
+    return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+// Returns the URL only if it uses http(s); otherwise null. Blocks javascript:, data:, etc.
+function safeHttpUrl(value) {
+    try {
+        const u = new URL(String(value ?? '').trim());
+        return (u.protocol === 'http:' || u.protocol === 'https:') ? u.href : null;
+    } catch (e) {
+        return null;
+    }
+}
+
 // --- i18n Translation Dictionary ---
 const i18n = {
     tr: {
@@ -1107,7 +1128,7 @@ async function initSettingsPrayerDropdowns() {
 
     try {
         const countries = await fetchDiyanet('/api/Place/Countries');
-        countrySelect.innerHTML = countries.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+        countrySelect.innerHTML = countries.map(c => `<option value="${escapeHtml(c.id)}">${escapeHtml(c.name)}</option>`).join('');
         
         const savedCountryId = appSettings.prayer_country_id || 2;
         countrySelect.value = savedCountryId;
@@ -1134,7 +1155,7 @@ async function loadStatesForCountry(countryId) {
     try {
         const states = await fetchDiyanet(`/api/Place/States/${countryId}`);
         if (states && states.length > 0) {
-            stateSelect.innerHTML = states.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+            stateSelect.innerHTML = states.map(s => `<option value="${escapeHtml(s.id)}">${escapeHtml(s.name)}</option>`).join('');
             stateSelect.disabled = false;
 
             const savedStateId = appSettings.prayer_state_id;
@@ -1164,7 +1185,7 @@ async function loadCitiesForState(stateId) {
     try {
         const cities = await fetchDiyanet(`/api/Place/Cities/${stateId}`);
         if (cities && cities.length > 0) {
-            citySelect.innerHTML = cities.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+            citySelect.innerHTML = cities.map(c => `<option value="${escapeHtml(c.id)}">${escapeHtml(c.name)}</option>`).join('');
             citySelect.disabled = false;
 
             const savedCityId = appSettings.prayer_city_id;
@@ -1843,21 +1864,37 @@ function requestGeolocationAndSave(feedbackElId) {
 }
 
 // --- Shortcuts ---
-function getShortcutIconHtml(item) {
-    if (item.url && (item.url.startsWith('http://') || item.url.startsWith('https://'))) {
-        try {
-            const domain = new URL(item.url).hostname;
-            const faviconUrl = `https://www.google.com/s2/favicons?sz=64&domain=${domain}`;
-            return `<img class="shortcut-tile-icon-img" src="${faviconUrl}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><span class="shortcut-tile-icon-emoji" style="display:none;">🌐</span>`;
-        } catch (e) {
-            return `<span class="shortcut-tile-icon-emoji">🌐</span>`;
-        }
+// Builds the shortcut icon with DOM APIs (no innerHTML) so user-supplied values cannot inject markup.
+function createShortcutIconEl(item) {
+    const fallback = document.createElement('span');
+    fallback.className = 'shortcut-tile-icon-emoji';
+    fallback.textContent = '🌐';
+
+    const frag = document.createDocumentFragment();
+    const pageUrl = safeHttpUrl(item.url);
+    if (pageUrl) {
+        const img = document.createElement('img');
+        img.className = 'shortcut-tile-icon-img';
+        img.src = `https://www.google.com/s2/favicons?sz=64&domain=${encodeURIComponent(new URL(pageUrl).hostname)}`;
+        fallback.style.display = 'none';
+        img.addEventListener('error', () => {
+            img.style.display = 'none';
+            fallback.style.display = 'block';
+        });
+        frag.append(img, fallback);
+        return frag;
     }
-    const icon = item.icon || '🌐';
-    if (icon.startsWith('http') || icon.startsWith('/') || icon.length > 4) {
-        return `<img class="shortcut-tile-icon-img" src="${icon}">`;
+
+    const icon = String(item.icon || '🌐');
+    const iconUrl = safeHttpUrl(icon);
+    if (iconUrl) {
+        const img = document.createElement('img');
+        img.className = 'shortcut-tile-icon-img';
+        img.src = iconUrl;
+        return img;
     }
-    return `<span class="shortcut-tile-icon-emoji">${icon}</span>`;
+    fallback.textContent = icon;
+    return fallback;
 }
 
 function initShortcuts() {
@@ -1868,14 +1905,15 @@ function initShortcuts() {
     list.forEach((item, index) => {
         const itemEl = document.createElement('div');
         itemEl.className = 'shortcut-item-tile';
-        itemEl.innerHTML = `
-            ${getShortcutIconHtml(item)}
-            <span class="shortcut-tile-label">${item.name}</span>
-        `;
+        const labelEl = document.createElement('span');
+        labelEl.className = 'shortcut-tile-label';
+        labelEl.textContent = item.name || '';
+        itemEl.append(createShortcutIconEl(item), labelEl);
         itemEl.addEventListener('click', (e) => {
             e.stopPropagation(); // Avoid exit event trigger
-            if (item.url.startsWith('http://') || item.url.startsWith('https://')) {
-                window.open(item.url, '_blank');
+            const targetUrl = safeHttpUrl(item.url);
+            if (targetUrl) {
+                window.open(targetUrl, '_blank', 'noopener,noreferrer');
             } else {
                 const lang = appSettings.language || 'tr';
                 const t = i18n[lang] || i18n.tr;
@@ -2025,8 +2063,8 @@ function renderUpcomingEvents() {
             eventDate.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
 
         item.innerHTML = `
-            <div class="event-item-summary">${e.summary}</div>
-            <div class="event-item-time">${timeStr} <span style="color:var(--color-accent)">(${e.source})</span></div>
+            <div class="event-item-summary">${escapeHtml(e.summary)}</div>
+            <div class="event-item-time">${escapeHtml(timeStr)} <span style="color:var(--color-accent)">(${escapeHtml(e.source)})</span></div>
         `;
         listEl.appendChild(item);
     });
@@ -2185,11 +2223,13 @@ function speakText(text) {
 
 async function fetchGeminiResponse(prompt) {
     const key = appSettings.gemini_api_key;
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
+    // Send the key in a header, not the query string, so it does not end up in URLs/logs.
+    const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
     const response = await fetch(url, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'x-goog-api-key': key
         },
         body: JSON.stringify({
             contents: [{ parts: [{ text: prompt }] }],
@@ -2200,7 +2240,9 @@ async function fetchGeminiResponse(prompt) {
     });
     if (!response.ok) throw new Error("Gemini API call failed");
     const data = await response.json();
-    return data.candidates[0].content.parts[0].text;
+    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (typeof text !== 'string') throw new Error("Gemini returned no text (possibly blocked)");
+    return text;
 }
 
 async function handleVoiceCommand(text) {
@@ -2603,9 +2645,9 @@ function renderSettingsShortcutsTable() {
     list.forEach((item, idx) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td><input type="text" class="icon-input" value="${item.icon}" data-idx="${idx}" data-field="icon"></td>
-            <td><input type="text" class="name-input" value="${item.name}" data-idx="${idx}" data-field="name"></td>
-            <td><input type="text" class="path-input" value="${item.url}" data-idx="${idx}" data-field="url"></td>
+            <td><input type="text" class="icon-input" value="${escapeHtml(item.icon)}" data-idx="${idx}" data-field="icon"></td>
+            <td><input type="text" class="name-input" value="${escapeHtml(item.name)}" data-idx="${idx}" data-field="name"></td>
+            <td><input type="text" class="path-input" value="${escapeHtml(item.url)}" data-idx="${idx}" data-field="url"></td>
             <td><button class="delete-row-btn" data-idx="${idx}">🗑️</button></td>
         `;
         tbody.appendChild(tr);
@@ -2639,7 +2681,7 @@ function renderSettingsIcsList() {
         const row = document.createElement('div');
         row.className = 'ics-source-row';
         row.innerHTML = `
-            <input type="text" value="${src}" placeholder="ICS dosya yolu veya web linki" data-idx="${idx}">
+            <input type="text" value="${escapeHtml(src)}" placeholder="ICS dosya yolu veya web linki" data-idx="${idx}">
             <button class="delete-row-btn" data-idx="${idx}">🗑️</button>
         `;
         container.appendChild(row);
