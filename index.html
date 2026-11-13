@@ -518,30 +518,22 @@
 
                     <!-- Calendar Tab -->
                     <div id="tab-calendar" class="tab-pane">
-                        <h3 data-i18n="lbl_cal_sync">Etkinlik Senkronizasyonu (.ics)</h3>
-                        <p class="help-text" data-i18n="lbl_cal_help">Yerel (.ics) dosya yollarını veya Google Calendar vb. özel URL'lerini
-                            ekleyebilirsiniz.</p>
-                        <div class="ics-sources-list" id="ics-sources-container">
-                            <!-- Dynamic synced ICS inputs -->
-                        </div>
+                        <h3 data-i18n="lbl_cal_sync">Takvim İçe Aktarma (.ics)</h3>
+                        <p class="help-text" data-i18n="lbl_cal_help">Takvim uygulamanızdan dışa aktardığınız .ics dosyasını yükleyin. Dosya yalnızca bu tarayıcıda saklanır.</p>
                         <div class="flex-row" style="gap: 10px; margin-bottom: 15px;">
-                            <button id="btn-add-ics-source" class="action-btn success" data-i18n="lbl_cal_add_source">+ Takvim Kaynağı Ekle</button>
-                            <button id="btn-upload-ics-web" class="action-btn info" style="display: none;" data-i18n="lbl_cal_upload">ICS Dosyası Yükle</button>
+                            <button id="btn-upload-ics-web" class="action-btn info" data-i18n="lbl_cal_upload">ICS Dosyası Yükle</button>
                         </div>
                         <div class="divider" style="margin: 15px 0; border-top: 1px solid rgba(255,255,255,0.08);">
                         </div>
                         <div class="gcal-guide-box"
                             style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); padding: 12px; border-radius: 8px; margin-top: 10px;">
                             <h4 style="margin-bottom: 8px; font-size: 0.85rem; text-transform: uppercase; color: var(--color-accent);"
-                                id="lbl_cal_gcal_title" data-i18n="lbl_cal_gcal_title">Google Takvim Nasıl Eklenir?</h4>
+                                id="lbl_cal_gcal_title" data-i18n="lbl_cal_gcal_title">Google Takvim Nasıl Aktarılır?</h4>
                             <ul
                                 style="font-size: 0.75rem; color: var(--color-text-muted); padding-left: 15px; display: flex; flex-direction: column; gap: 6px; line-height: 1.4;">
-                                <li id="lbl_cal_gcal_step1" data-i18n="lbl_cal_gcal_step1">1. Google Takvim'i açın, sol menüde takviminizin yanındaki
-                                    üç noktaya basıp "Ayarlar ve Paylaşım" seçeneğine gidin.</li>
-                                <li id="lbl_cal_gcal_step2" data-i18n="lbl_cal_gcal_step2">2. Sayfanın en altına kaydırın ve "iCal biçimindeki gizli
-                                    adres" yazan kısmın yanındaki URL'yi kopyalayın.</li>
-                                <li id="lbl_cal_gcal_step3" data-i18n="lbl_cal_gcal_step3">3. Kopyaladığınız URL'yi yukarıdaki "Takvim Kaynağı"
-                                    kutularından birine yapıştırın.</li>
+                                <li id="lbl_cal_gcal_step1" data-i18n="lbl_cal_gcal_step1">1. Google Takvim'de sağ üstteki ⚙️ simgesinden "Ayarlar"ı açıp "İçe ve dışa aktar" bölümüne gidin.</li>
+                                <li id="lbl_cal_gcal_step2" data-i18n="lbl_cal_gcal_step2">2. "Dışa aktar" butonuna basın; .ics dosyalarını içeren bir .zip indirilir. Zip dosyasını açın.</li>
+                                <li id="lbl_cal_gcal_step3" data-i18n="lbl_cal_gcal_step3">3. Yukarıdaki "ICS Dosyası Yükle" butonuyla istediğiniz .ics dosyasını seçin.</li>
                             </ul>
                         </div>
                     </div>

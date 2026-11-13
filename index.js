@@ -113,14 +113,13 @@ const i18n = {
         lbl_event_diag_summary: "Etkinlik Başlığı",
         lbl_event_diag_start: "Başlangıç Zamanı",
         lbl_event_diag_end: "Bitiş Zamanı",
-        lbl_cal_sync: "Etkinlik Senkronizasyonu (.ics)",
-        lbl_cal_help: "Yerel (.ics) dosya yollarını veya Google Calendar vb. özel URL'lerini ekleyebilirsiniz.",
-        lbl_cal_add_source: "+ Takvim Kaynağı Ekle",
+        lbl_cal_sync: "Takvim İçe Aktarma (.ics)",
+        lbl_cal_help: "Takvim uygulamanızdan dışa aktardığınız .ics dosyasını yükleyin. Dosya yalnızca bu tarayıcıda saklanır.",
         lbl_cal_upload: "ICS Dosyası Yükle",
-        lbl_cal_gcal_title: "Google Takvim Nasıl Eklenir?",
-        lbl_cal_gcal_step1: "1. Google Takvim'i açın, sol menüde takviminizin yanındaki üç noktaya basıp \"Ayarlar ve Paylaşım\" seçeneğine gidin.",
-        lbl_cal_gcal_step2: "2. Sayfanın en altına kaydırın ve \"iCal biçimindeki gizli adres\" yazan kısmın yanındaki URL'yi kopyalayın.",
-        lbl_cal_gcal_step3: "3. Kopyaladığınız URL'yi yukarıdaki \"Takvim Kaynağı\" kutularından birine yapıştırın.",
+        lbl_cal_gcal_title: "Google Takvim Nasıl Aktarılır?",
+        lbl_cal_gcal_step1: "1. Google Takvim'de sağ üstteki ⚙️ simgesinden \"Ayarlar\"ı açıp \"İçe ve dışa aktar\" bölümüne gidin.",
+        lbl_cal_gcal_step2: "2. \"Dışa aktar\" butonuna basın; .ics dosyalarını içeren bir .zip indirilir. Zip dosyasını açın.",
+        lbl_cal_gcal_step3: "3. Yukarıdaki \"ICS Dosyası Yükle\" butonuyla istediğiniz .ics dosyasını seçin.",
         lbl_ai_key_title: "Gemini API Anahtarı (API Key)",
         lbl_ai_key_placeholder: "AI cevapları için Gemini API Key girin",
         lbl_ai_key_desc: "API anahtarı girildiğinde asistanınız genel sorulara Gemini üzerinden cevap verebilir. Anahtar girilmezse yalnızca yerel komutları çalıştırır.",
@@ -251,14 +250,13 @@ const i18n = {
         lbl_event_diag_summary: "Event Title",
         lbl_event_diag_start: "Start Time",
         lbl_event_diag_end: "End Time",
-        lbl_cal_sync: "Event Synchronization (.ics)",
-        lbl_cal_help: "You can add local (.ics) file paths or Google Calendar private iCal URLs.",
-        lbl_cal_add_source: "+ Add Calendar Source",
+        lbl_cal_sync: "Calendar Import (.ics)",
+        lbl_cal_help: "Upload an .ics file exported from your calendar app. The file is stored only in this browser.",
         lbl_cal_upload: "Upload ICS File",
-        lbl_cal_gcal_title: "How to Add Google Calendar?",
-        lbl_cal_gcal_step1: "1. Open Google Calendar, click the three dots next to your calendar in the left menu, and choose 'Settings and sharing'.",
-        lbl_cal_gcal_step2: "2. Scroll to the bottom of the page and copy the URL next to 'Secret address in iCal format'.",
-        lbl_cal_gcal_step3: "3. Paste the copied URL into one of the 'Calendar Source' input boxes above.",
+        lbl_cal_gcal_title: "How to Export Google Calendar?",
+        lbl_cal_gcal_step1: "1. In Google Calendar, click the ⚙️ icon at the top right, open 'Settings' and go to 'Import & export'.",
+        lbl_cal_gcal_step2: "2. Click 'Export'; a .zip containing .ics files is downloaded. Extract the zip.",
+        lbl_cal_gcal_step3: "3. Use the 'Upload ICS File' button above to select the .ics file you want.",
         lbl_ai_key_title: "Gemini API Key",
         lbl_ai_key_placeholder: "Enter Gemini API Key for AI responses",
         lbl_ai_key_desc: "When the API key is entered, your assistant can answer general questions via Gemini. If no key is entered, it only executes local commands.",
@@ -389,14 +387,13 @@ const i18n = {
         lbl_event_diag_summary: "Ereignistitel",
         lbl_event_diag_start: "Startzeit",
         lbl_event_diag_end: "Endzeit",
-        lbl_cal_sync: "Ereignissynchronisation (.ics)",
-        lbl_cal_help: "Sie können lokale (.ics) Pfade oder private Google Kalender iCal-URLs hinzufügen.",
-        lbl_cal_add_source: "+ Kalenderquelle hinzufügen",
+        lbl_cal_sync: "Kalenderimport (.ics)",
+        lbl_cal_help: "Laden Sie eine aus Ihrer Kalender-App exportierte .ics-Datei hoch. Die Datei wird nur in diesem Browser gespeichert.",
         lbl_cal_upload: "ICS-Datei hochladen",
-        lbl_cal_gcal_title: "Wie füge ich Google Kalender hinzu?",
-        lbl_cal_gcal_step1: "1. Öffnen Sie Google Kalender, klicken Sie neben Ihrem Kalender im linken Menü auf die drei Punkte und wählen Sie 'Einstellungen und Freigabe'.",
-        lbl_cal_gcal_step2: "2. Scrollen Sie nach unten und kopieren Sie die URL unter 'Privatadresse im iCal-Format'.",
-        lbl_cal_gcal_step3: "3. Fügen Sie die kopierte URL in eines der Eingabefelder oben ein.",
+        lbl_cal_gcal_title: "Wie exportiere ich Google Kalender?",
+        lbl_cal_gcal_step1: "1. Klicken Sie in Google Kalender oben rechts auf ⚙️, öffnen Sie 'Einstellungen' und gehen Sie zu 'Importieren und exportieren'.",
+        lbl_cal_gcal_step2: "2. Klicken Sie auf 'Exportieren'; eine .zip-Datei mit .ics-Dateien wird heruntergeladen. Entpacken Sie sie.",
+        lbl_cal_gcal_step3: "3. Wählen Sie die gewünschte .ics-Datei über die Schaltfläche 'ICS-Datei hochladen' oben aus.",
         lbl_ai_key_title: "Gemini API-Schlüssel",
         lbl_ai_key_placeholder: "Geben Sie den Gemini API-Schlüssel für KI-Antworten ein",
         lbl_ai_key_desc: "Wenn der API-Schlüssel eingegeben wird, kann Ihr Assistent allgemeine Fragen über Gemini beantworten. Wenn kein Schlüssel eingegeben wird, führt er nur lokale Befehle aus.",
@@ -527,14 +524,13 @@ const i18n = {
         lbl_event_diag_summary: "Заголовок события",
         lbl_event_diag_start: "Время начала",
         lbl_event_diag_end: "Время окончания",
-        lbl_cal_sync: "Синхронизация событий (.ics)",
-        lbl_cal_help: "Вы можете добавить пути к локальным файлам (.ics) или ссылки iCal от Google Календаря.",
-        lbl_cal_add_source: "+ Добавить источник календаря",
+        lbl_cal_sync: "Импорт календаря (.ics)",
+        lbl_cal_help: "Загрузите файл .ics, экспортированный из вашего календаря. Файл хранится только в этом браузере.",
         lbl_cal_upload: "Загрузить файл ICS",
-        lbl_cal_gcal_title: "Как добавить Google Календарь?",
-        lbl_cal_gcal_step1: "1. Откройте Google Календарь, нажмите три точки рядом с вашим календарем слева, выберите 'Настройки и общий доступ'.",
-        lbl_cal_gcal_step2: "2. Прокрутите страницу до конца и скопируйте ссылку рядом с 'Закрытый адрес в формате iCal'.",
-        lbl_cal_gcal_step3: "3. Вставьте скопированную ссылку в одно из полей ввода выше.",
+        lbl_cal_gcal_title: "Как экспортировать Google Календарь?",
+        lbl_cal_gcal_step1: "1. В Google Календаре нажмите ⚙️ в правом верхнем углу, откройте 'Настройки' и перейдите в 'Импорт и экспорт'.",
+        lbl_cal_gcal_step2: "2. Нажмите 'Экспортировать'; будет загружен .zip с файлами .ics. Распакуйте архив.",
+        lbl_cal_gcal_step3: "3. Выберите нужный файл .ics с помощью кнопки 'Загрузить файл ICS' выше.",
         lbl_ai_key_title: "Ключ Gemini API",
         lbl_ai_key_placeholder: "Введите ключ Gemini API для ответов ИИ",
         lbl_ai_key_desc: "При указании ключа API ассистент сможет отвечать на общие вопросы через Gemini. Без ключа будут выполняться только локальные команды.",
@@ -665,14 +661,13 @@ const i18n = {
         lbl_event_diag_summary: "Наслов на настан",
         lbl_event_diag_start: "Време на почеток",
         lbl_event_diag_end: "Време на крај",
-        lbl_cal_sync: "Синхронизација на настани (.ics)",
-        lbl_cal_help: "Може да додадете локални патеки за (.ics) датотеки или тајни iCal линкови од Google Календар.",
-        lbl_cal_add_source: "+ Додај извор на календар",
+        lbl_cal_sync: "Увоз на календар (.ics)",
+        lbl_cal_help: "Прикачете .ics датотека извезена од вашата апликација за календар. Датотеката се чува само во овој прелистувач.",
         lbl_cal_upload: "Прикачи ICS датотека",
-        lbl_cal_gcal_title: "Како да додадете Google Календар?",
-        lbl_cal_gcal_step1: "1. Отворете Google Календар, кликнете на трите точки до вашиот календар лево и изберете 'Поставки и споделување'.",
-        lbl_cal_gcal_step2: "2. Скролувајте до дното и копирајте ја URL адресата под 'Тајна адреса во iCal формат'.",
-        lbl_cal_gcal_step3: "3. Залепете ја копираната URL адреса во едно од полињата погоре.",
+        lbl_cal_gcal_title: "Како да извезете Google Календар?",
+        lbl_cal_gcal_step1: "1. Во Google Календар кликнете на ⚙️ горе десно, отворете 'Поставки' и одете на 'Увоз и извоз'.",
+        lbl_cal_gcal_step2: "2. Кликнете 'Извези'; ќе се преземе .zip со .ics датотеки. Распакувајте ја.",
+        lbl_cal_gcal_step3: "3. Изберете ја саканата .ics датотека со копчето 'Прикачи ICS датотека' погоре.",
         lbl_ai_key_title: "Клуч за Gemini API",
         lbl_ai_key_placeholder: "Внесете Gemini API клуч за одговори од ВЕ",
         lbl_ai_key_desc: "Кога е внесен API клучот, вашиот асистент може да одговара на општи прашања преку Gemini. Ако не е внесен клуч, извршува само локални команди.",
@@ -813,7 +808,6 @@ async function loadSettingsAndInit() {
         "prayer_state_id": 540,
         "prayer_city_id": 9560,
         "prayer_city_name": "İZMİR",
-        "calendar_sync_ics": [],
         "calendar_local_events": [
             { "summary": "Örnek Etkinlik", "start": "2026-08-06T19:00:00", "end": "2026-08-06T20:00:00", "source": "Local" }
         ],
@@ -840,6 +834,13 @@ async function loadSettingsAndInit() {
         }
     } else {
         appSettings = defaultSettings;
+    }
+    // Calendar URL sync was removed (private iCal URLs were sent to a third-party proxy).
+    // Purge any URLs saved by older versions.
+    if ('calendar_sync_ics' in appSettings) {
+        delete appSettings.calendar_sync_ics;
+        localStorage.setItem('niltab_settings', JSON.stringify(appSettings));
+        localStorage.removeItem('nilsaver_settings');
     }
     initApp();
     setupSearchBar();
@@ -1935,30 +1936,6 @@ async function initCalendar() {
             calendarEvents.push(...parsed);
         } catch (e) { }
     }
-    const uploadBtn = document.getElementById('btn-upload-ics-web');
-    if (uploadBtn) uploadBtn.style.display = 'inline-block';
-
-    // Fetch and sync URLs in calendar_sync_ics using corsproxy.io to bypass CORS issues on a static site
-    const syncUrls = appSettings.calendar_sync_ics || [];
-    for (const url of syncUrls) {
-        if (url && url.trim().startsWith('http')) {
-            try {
-                // Use corsproxy.io as a reliable public CORS bypass proxy
-                const proxiedUrl = `https://corsproxy.io/?${encodeURIComponent(url.trim())}`;
-                const response = await fetch(proxiedUrl);
-                if (response.ok) {
-                    const text = await response.text();
-                    const urlEvents = parseIcsContentJS(text, new URL(url).hostname);
-                    if (urlEvents && urlEvents.length > 0) {
-                        calendarEvents.push(...urlEvents);
-                    }
-                }
-            } catch (err) {
-                console.warn(`Failed to fetch ICS feed from: ${url}`, err);
-            }
-        }
-    }
-
     renderCalendarGrid();
     renderUpcomingEvents();
 }
@@ -2633,7 +2610,6 @@ function openSettingsModal() {
     document.getElementById('setting-gemini-key').value = appSettings.gemini_api_key || '';
 
     renderSettingsShortcutsTable();
-    renderSettingsIcsList();
     renderBackgroundPresets();
 }
 
@@ -2668,39 +2644,6 @@ function renderSettingsShortcutsTable() {
             const idx = e.target.getAttribute('data-idx');
             appSettings.shortcuts.splice(idx, 1);
             renderSettingsShortcutsTable();
-        });
-    });
-}
-
-function renderSettingsIcsList() {
-    const sources = appSettings.calendar_sync_ics || [];
-    const container = document.getElementById('ics-sources-container');
-    container.innerHTML = '';
-
-    sources.forEach((src, idx) => {
-        const row = document.createElement('div');
-        row.className = 'ics-source-row';
-        row.innerHTML = `
-            <input type="text" value="${escapeHtml(src)}" placeholder="ICS dosya yolu veya web linki" data-idx="${idx}">
-            <button class="delete-row-btn" data-idx="${idx}">🗑️</button>
-        `;
-        container.appendChild(row);
-    });
-
-    // Listen to inputs
-    container.querySelectorAll('input').forEach(input => {
-        input.addEventListener('change', (e) => {
-            const idx = e.target.getAttribute('data-idx');
-            appSettings.calendar_sync_ics[idx] = e.target.value;
-        });
-    });
-
-    // Listen to delete
-    container.querySelectorAll('.delete-row-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const idx = e.target.getAttribute('data-idx');
-            appSettings.calendar_sync_ics.splice(idx, 1);
-            renderSettingsIcsList();
         });
     });
 }
@@ -3012,13 +2955,6 @@ function setupEventListeners() {
         } else {
             alert(t.cal_field_required);
         }
-    });
-
-    // Add Calendar ICS Source row in settings editor
-    document.getElementById('btn-add-ics-source').addEventListener('click', () => {
-        if (!appSettings.calendar_sync_ics) appSettings.calendar_sync_ics = [];
-        appSettings.calendar_sync_ics.push('');
-        renderSettingsIcsList();
     });
 
     document.getElementById('btn-upload-ics-web').addEventListener('click', () => {

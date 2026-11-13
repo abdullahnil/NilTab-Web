@@ -1450,24 +1450,6 @@ input[type="range"] {
     transform: scale(1.1);
 }
 
-/* Calendar ICS Sync Inputs */
-.ics-sources-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-
-.ics-source-row {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-}
-
-.ics-source-row input {
-    flex-grow: 1;
-}
-
 /* Helper Scrollbar Style */
 ::-webkit-scrollbar {
     width: 6px;
