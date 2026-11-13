@@ -1,5 +1,6 @@
 const http = require('http');
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 
 // Minimal .env loader (no dependencies). Values already set in the environment win.
@@ -38,6 +39,27 @@ const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || "*")
 // 0 = none (use socket address), 1 = nginx only, 2 = Cloudflare + nginx.
 // The client IP is taken counting from the RIGHT end, so values a client fakes on the left are ignored.
 const TRUST_PROXY = process.env.TRUST_PROXY === 'true' ? 1 : (parseInt(process.env.TRUST_PROXY, 10) || 0);
+
+// LOCAL_ONLY=1: accept TCP connections only from this machine's own addresses (e.g. a Cloudflare
+// Tunnel / reverse proxy running on the same host), even if it connects via the public IP.
+// Direct connections from the internet to IP:PORT are dropped before any HTTP is processed.
+const LOCAL_ONLY = process.env.LOCAL_ONLY === '1' || process.env.LOCAL_ONLY === 'true';
+
+function normalizeIp(ip) {
+    if (!ip) return '';
+    return ip.startsWith('::ffff:') ? ip.slice(7) : ip;
+}
+
+let localAddresses = new Set();
+function refreshLocalAddresses() {
+    const set = new Set(['127.0.0.1', '::1']);
+    for (const list of Object.values(os.networkInterfaces())) {
+        for (const iface of list || []) set.add(normalizeIp(iface.address));
+    }
+    localAddresses = set;
+}
+refreshLocalAddresses();
+setInterval(refreshLocalAddresses, 5 * 60 * 1000).unref();
 
 // Max upstream (Diyanet) requests per client IP per minute. Cache hits do not count.
 const RATE_LIMIT_PER_MIN = parseInt(process.env.RATE_LIMIT_PER_MIN, 10) || 30;
@@ -268,12 +290,23 @@ const server = http.createServer(async (req, res) => {
     }
 });
 
+if (LOCAL_ONLY) {
+    server.on('connection', (socket) => {
+        const remote = normalizeIp(socket.remoteAddress);
+        if (!localAddresses.has(remote)) {
+            log(`Dropped direct connection from ${remote} (LOCAL_ONLY)`);
+            socket.destroy();
+        }
+    });
+}
+
 server.listen(PORT, HOST, () => {
     console.log(`=========================================`);
     console.log(`Diyanet REST API Proxy Server Running!`);
     console.log(`Listening on: ${HOST}:${PORT}`);
     console.log(`Allowed origins: ${ALLOWED_ORIGINS.join(', ')}`);
     console.log(`Trusted proxy hops (X-Forwarded-For): ${TRUST_PROXY}`);
+    console.log(`Local connections only: ${LOCAL_ONLY}`);
     console.log(`Rate limit: ${RATE_LIMIT_PER_MIN} upstream req/min per IP`);
     console.log(`URL schema example: http://localhost:${PORT}/api/Place/Countries`);
     console.log(`=========================================`);

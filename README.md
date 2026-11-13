@@ -43,6 +43,7 @@ Diyanet REST API CORS ve kimlik doğrulama gereksinimlerini güvenli şekilde ka
    export HOST=127.0.0.1         # nginx arkasındaysa yalnızca localhost'u dinle
    export TRUST_PROXY=1          # önündeki proxy sayısı: 0 yok, 1 nginx, 2 Cloudflare + nginx
    export RATE_LIMIT_PER_MIN=30  # IP başına dakikada Diyanet'e iletilen istek sınırı
+   export LOCAL_ONLY=1           # yalnızca aynı makinedeki tünel/proxy'den gelen bağlantıları kabul et
    ```
 3. Proxy sunucusunu başlatın:
    ```bash
@@ -61,6 +62,7 @@ Proxy sunucusu (`diyanet-proxy.js`), botların veya yetkisiz isteklerin Diyanet 
 - Yalnızca izin verilen API yollarına (`/api/Place/*`, `/api/PrayerTime/*`) izin verilir.
 - Tanımlanmayan diğer tüm istekler Diyanet'e iletilmeden `404 Not Found` olarak engellenir.
 - Yollar birebir eşleştirilir (yalnızca sayısal ID'ler kabul edilir) ve query string iletilmez.
+- `LOCAL_ONLY=1` ile proxy'ye yalnızca aynı sunucudaki Cloudflare Tunnel/nginx bağlanabilir; internetten `IP:PORT` ile gelen doğrudan bağlantılar kesilir.
 - `ALLOWED_ORIGINS` ile yalnızca kendi alan adınızdan gelen tarayıcı istekleri kabul edilir.
 - Yanıtlar sunucu belleğinde önbelleğe alınır (yer listeleri 7 gün, namaz vakitleri 6 saat). Diyanet'e giden istekler IP başına hız sınırına tabidir.
 - Diyanet giriş bilgileri yalnızca sunucudaki ortam değişkenlerinde tutulmalıdır; tarayıcı tarafına asla koymayın.
